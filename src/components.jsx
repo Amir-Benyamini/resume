@@ -3,6 +3,62 @@
 
 const { useState, useEffect, useRef, useMemo } = React;
 
+// ─── Inject responsive CSS overrides (mobile + tablet) ──────────────
+// The artifact's base CSS lives in the bundle template; appending a
+// late <style> here lets us layer mobile rules without touching it.
+(() => {
+  if (typeof document === "undefined") return;
+  if (document.getElementById("resume-responsive-css")) return;
+  const css = `
+    html, body { overflow-x: hidden; }
+
+    /* Tablet + smaller phones */
+    @media (max-width: 820px) {
+      .app { padding: 18px 14px 32px !important; gap: 18px !important; }
+      .hud-header { padding: 16px 18px !important; gap: 14px !important; }
+      .hud-name h1 { font-size: 36px !important; line-height: 1.05 !important; }
+      .hud-identity { gap: 18px !important; padding: 4px 0 !important; }
+      .hud-stats { gap: 16px !important; }
+      .stat { min-width: 0 !important; }
+      .role-line { font-size: 13px !important; }
+      .panel-header { padding: 12px 14px !important; }
+      .timeline { padding: 16px 14px !important; }
+      .tl-item { padding-left: 30px !important; padding-bottom: 18px !important; }
+      .timeline-spine { left: 32px !important; }
+      .tl-marker { left: 6px !important; }
+      .tl-title { font-size: 16px !important; }
+      .tl-bullets li { font-size: 13.5px !important; max-width: 100% !important; word-wrap: break-word; overflow-wrap: anywhere; }
+      .skill-row { grid-template-columns: 130px 1fr 28px !important; gap: 8px !important; }
+      .skill-name { font-size: 12px !important; }
+      .terminal-body { font-size: 12.5px !important; max-height: 320px !important; padding: 14px 14px !important; }
+      .panel-bar { padding: 8px 12px !important; }
+      .suggestions { padding: 10px 14px 12px !important; gap: 6px !important; }
+      .trait-grid, .lang-list { padding: 12px 14px !important; }
+      .stack-tag { font-size: 11px !important; padding: 2px 6px !important; }
+      .chip { padding: 5px 8px 5px 5px !important; }
+      .chip-icon { width: 20px !important; height: 20px !important; font-size: 10.5px !important; }
+      .hud-corner { width: 10px !important; height: 10px !important; }
+    }
+
+    /* Narrow phones */
+    @media (max-width: 480px) {
+      .app { padding: 14px 10px 28px !important; gap: 14px !important; }
+      .hud-name h1 { font-size: 30px !important; }
+      .hud-stats { flex-direction: column !important; gap: 8px !important; align-items: flex-start !important; }
+      .hud-contact { gap: 6px !important; padding-top: 12px !important; }
+      .skill-row { grid-template-columns: 105px 1fr 26px !important; gap: 6px !important; }
+      .skill-name { font-size: 11.5px !important; }
+      .terminal-body { font-size: 12px !important; max-height: 280px !important; }
+      .tl-title { font-size: 15px !important; }
+      .tl-summary { font-size: 13px !important; }
+    }
+  `;
+  const s = document.createElement("style");
+  s.id = "resume-responsive-css";
+  s.textContent = css;
+  document.head.appendChild(s);
+})();
+
 // ─── DATA ───────────────────────────────────────────────────────────
 const RESUME = {
   name: "Amir Benyamini",

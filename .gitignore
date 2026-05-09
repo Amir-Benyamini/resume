@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+._*
+.AppleDouble
+.LSOverride
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node / build artifacts (none today, but defensive)
+node_modules/
+dist/
+build/
+.cache/
+*.log
+
+# Environment
+.env
+.env.local

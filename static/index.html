@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amir Benyamini · DevOps Engineer</title>
+<meta name="description" content="Amir Benyamini, DevOps Engineer. Platform Engineering, Self-Service IaC, CI/CD at Scale, AI-Augmented DevOps.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0d10;
+  --panel: #0d1116;
+  --panel-2: #11161d;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --text: #e6edf3;
+  --muted: #6b7681;
+  --accent: #4ade80;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --sans: "Inter", -apple-system, system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--sans); font-size: 15px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(74, 222, 128, 0.04), transparent 60%),
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px) 0 0 / 32px 32px,
+    var(--bg);
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+h1, h2, h3 { font-weight: 500; letter-spacing: -0.01em; }
+.mono { font-family: var(--mono); }
+.muted { color: var(--muted); }
+.small { font-size: 12.5px; letter-spacing: 0.04em; }
+.micro { font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; }
+
+.app { max-width: 1280px; margin: 0 auto; padding: 32px 28px 48px; display: flex; flex-direction: column; gap: 28px; }
+
+/* Header */
+.hud-header {
+  position: relative; background: linear-gradient(180deg, var(--panel-2), var(--panel));
+  border: 1px solid var(--border); border-radius: 4px; padding: 24px 28px;
+  display: flex; flex-direction: column; gap: 20px; overflow: hidden;
+}
+.hud-corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--accent); }
+.hud-corner.tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+.hud-corner.tr { top: 8px; right: 8px; border-left: none; border-bottom: none; }
+.hud-corner.bl { bottom: 8px; left: 8px; border-right: none; border-top: none; }
+.hud-corner.br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+.hud-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+.hud-identity { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap; padding: 8px 0 4px; }
+.hud-name h1 {
+  font-size: clamp(40px, 6vw, 64px); font-weight: 600; letter-spacing: -0.025em;
+  line-height: 1; margin: 6px 0 12px;
+}
+.role-line { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; font-family: var(--mono); font-size: 14px; }
+.role { font-weight: 500; color: var(--accent); }
+.hud-stats { display: flex; gap: 28px; flex-wrap: wrap; }
+.stat { min-width: 120px; }
+.stat-value { font-size: 14px; margin-top: 4px; display: flex; align-items: center; gap: 8px; font-weight: 500; color: var(--accent); font-family: var(--mono); }
+.blink-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+.hud-contact { border-top: 1px dashed var(--border); padding-top: 16px; gap: 10px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px 6px 6px;
+  border: 1px solid var(--border); border-radius: 3px; background: rgba(255, 255, 255, 0.015);
+  transition: border-color 0.15s, background 0.15s;
+}
+.chip:hover { border-color: var(--border-strong); background: rgba(255, 255, 255, 0.03); }
+.chip-icon {
+  width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid; border-radius: 3px; font-family: var(--mono); font-size: 11px;
+  color: var(--accent); border-color: rgba(74, 222, 128, 0.33);
+}
+
+/* Layout */
+.main-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
+.col { display: flex; flex-direction: column; gap: 28px; }
+@media (max-width: 980px) { .main-grid { grid-template-columns: 1fr; } }
+
+/* Panel */
+.panel { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+.panel-header { display: flex; align-items: baseline; gap: 10px; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.panel-header h2 { font-size: 13px; letter-spacing: 0.18em; font-family: var(--mono); }
+
+/* Summary block (replaces interactive terminal) */
+.summary-panel { padding: 20px 22px; background: var(--panel); border: 1px solid var(--border); border-radius: 4px; }
+.summary-panel .label { font-family: var(--mono); color: var(--muted); font-size: 12.5px; letter-spacing: 0.04em; }
+.summary-panel p { margin-top: 10px; max-width: 68ch; }
+
+/* Projects */
+.projects-panel { padding: 0; }
+.project-card {
+  padding: 18px 22px; border-bottom: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.project-card:last-child { border-bottom: none; }
+.project-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.project-name { font-family: var(--mono); font-size: 16px; color: var(--accent); font-weight: 500; }
+.project-tagline { color: var(--text); font-size: 13.5px; }
+.project-badge {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em;
+  text-transform: uppercase; padding: 2px 7px; border: 1px solid;
+  border-radius: 2px; color: var(--muted); border-color: rgba(255,255,255,0.15);
+  margin-left: auto;
+}
+.project-pitch { color: var(--muted); font-size: 13.5px; max-width: 60ch; }
+.project-section-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted); margin-top: 4px;
+}
+.project-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.project-list li { display: flex; gap: 10px; font-size: 13.5px; max-width: 64ch; }
+.project-list li .pmark { color: var(--accent); font-family: var(--mono); padding-top: 2px; flex: none; }
+.project-stack { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.project-stack .tag { font-family: var(--mono); font-size: 11.5px; padding: 2px 7px; border: 1px solid rgba(74, 222, 128, 0.27); border-radius: 2px; color: var(--text); }
+
+/* Skills */
+.skill-group { border-bottom: 1px solid var(--border); padding: 14px 20px; }
+.skill-group:last-child { border-bottom: none; }
+.skill-group-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--mono); font-size: 12.5px; }
+.skill-group-head .arrow { color: var(--accent); }
+.skill-row { display: grid; grid-template-columns: 200px 1fr 32px; align-items: center; gap: 12px; padding: 4px 0; }
+.skill-name { font-family: var(--mono); font-size: 12.5px; }
+.skill-bar { position: relative; height: 6px; background: rgba(255, 255, 255, 0.04); border-radius: 1px; overflow: hidden; }
+.skill-fill { height: 100%; background: var(--accent); box-shadow: 0 0 8px rgba(74, 222, 128, 0.4); }
+.skill-pct { font-family: var(--mono); font-size: 12.5px; color: var(--muted); text-align: right; }
+
+/* Timeline */
+.timeline { position: relative; padding: 20px 24px; }
+.timeline-spine {
+  position: absolute; left: 38px; top: 28px; bottom: 28px; width: 1px;
+  background: linear-gradient(to bottom, var(--accent), transparent); opacity: 0.5;
+}
+.tl-item { position: relative; padding-left: 36px; padding-bottom: 22px; }
+.tl-item:last-child { padding-bottom: 0; }
+.tl-marker {
+  position: absolute; left: 8px; top: 6px; width: 12px; height: 12px;
+  border: 2px solid var(--accent); border-radius: 50%; background: var(--bg); z-index: 1;
+}
+.tl-marker.active { background: var(--accent); }
+.tl-head-top { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.tl-status {
+  font-family: var(--mono); padding: 2px 7px; border: 1px solid;
+  font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4); border-color: rgba(255, 255, 255, 0.15); border-radius: 2px;
+}
+.tl-status.active { color: var(--accent); border-color: var(--accent); }
+.tl-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 4px; }
+.tl-company { font-family: var(--mono); font-size: 14px; color: var(--accent); }
+.tl-summary { color: var(--muted); font-size: 14px; max-width: 60ch; }
+.tl-bullets { list-style: none; padding: 14px 0 4px; display: flex; flex-direction: column; gap: 8px; }
+.tl-bullets li { display: flex; gap: 10px; font-size: 14px; max-width: 72ch; }
+.tl-bullets li .lead { color: var(--accent); font-weight: 600; }
+.bullet-mark { color: var(--accent); padding-top: 2px; font-family: var(--mono); }
+.stack { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.stack-tag { font-family: var(--mono); font-size: 12.5px; padding: 3px 8px; border: 1px solid rgba(74, 222, 128, 0.27); border-radius: 2px; }
+
+/* Meta */
+.meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 600px) { .meta-grid { grid-template-columns: 1fr; } }
+.trait-grid { display: grid; grid-template-columns: 1fr 1fr; padding: 16px 20px; gap: 8px 16px; font-family: var(--mono); font-size: 12.5px; }
+.trait .num { color: var(--accent); }
+.lang-list { padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+.lang-row { display: flex; justify-content: space-between; }
+.lang-level { font-family: var(--mono); font-size: 12.5px; color: var(--accent); }
+
+/* Footer */
+.hud-footer {
+  display: flex; justify-content: space-between; gap: 16px;
+  padding: 18px 6px; border-top: 1px solid var(--border); flex-wrap: wrap;
+  font-family: var(--mono); font-size: 12.5px; color: var(--muted);
+}
+.hud-footer a { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <header class="hud-header">
+    <div class="hud-corner tl"></div>
+    <div class="hud-corner tr"></div>
+    <div class="hud-corner bl"></div>
+    <div class="hud-corner br"></div>
+
+    <div class="hud-row">
+      <span class="dot"></span>
+      <span class="muted mono small">SESSION</span>
+      <span class="mono small">RESUME · static build</span>
+      <span class="muted mono small" style="margin-left: auto;">RESUME.v2026.05</span>
+    </div>
+
+    <div class="hud-identity">
+      <div class="hud-name">
+        <div class="mono muted small">$ whoami</div>
+        <h1>Amir Benyamini</h1>
+        <div class="role-line">
+          <span class="role">&gt; DevOps Engineer</span>
+          <span class="muted small">// Platform Engineering · Self-Service IaC · CI/CD at Scale · AI-Augmented DevOps</span>
+        </div>
+      </div>
+
+      <div class="hud-stats">
+        <div class="stat">
+          <div class="mono muted small">LOCATION</div>
+          <div class="stat-value">Rehovot, IL</div>
+        </div>
+        <div class="stat">
+          <div class="mono muted small">STATUS</div>
+          <div class="stat-value"><span class="blink-dot"></span>OPEN_TO_WORK</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hud-row hud-contact">
+      <a class="chip" href="mailto:benyamini.amir@gmail.com">
+        <span class="chip-icon">@</span>
+        <span class="mono small">benyamini.amir@gmail.com</span>
+      </a>
+      <a class="chip" href="tel:0505545521">
+        <span class="chip-icon">☏</span>
+        <span class="mono small">050-554-5521</span>
+      </a>
+      <a class="chip" href="https://www.linkedin.com/in/amir-bini-benyamini/" target="_blank" rel="noreferrer">
+        <span class="chip-icon">in</span>
+        <span class="mono small">linkedin/amir-bini-benyamini</span>
+      </a>
+      <a class="chip" href="https://github.com/Amir-Benyamini/" target="_blank" rel="noreferrer">
+        <span class="chip-icon">gh</span>
+        <span class="mono small">github/Amir-Benyamini</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="main-grid">
+    <div class="col">
+
+      <!-- Summary -->
+      <section class="summary-panel">
+        <div class="label">// summary</div>
+        <p>DevOps engineer who treats infrastructure as a product. I build self-service platforms that turn cloud and CI/CD complexity into one-line, reusable building blocks dev teams can ship with on their own. Currently driving the org-wide CI/CD and IaC strategy at Phoenix Financial, augmenting day-to-day work with GitHub Copilot, Claude Code, and custom agent skills / MCP servers.</p>
+      </section>
+
+      <!-- Experience -->
+      <section class="panel">
+        <div class="panel-header">
+          <span class="mono small muted">01 //</span>
+          <h2>EXPERIENCE.LOG</h2>
+          <span class="mono small muted" style="margin-left: auto;">2 entries</span>
+        </div>
+        <div class="timeline">
+          <div class="timeline-spine"></div>
+
+          <article class="tl-item">
+            <div class="tl-marker active"></div>
+            <div class="tl-head-top">
+              <span class="mono small muted">Jan 2025 - Present</span>
+              <span class="mono tl-status active">ACTIVE</span>
+            </div>
+            <div class="tl-title">
+              <span>DevOps Engineer</span>
+              <span class="muted">@</span>
+              <span class="tl-company">Phoenix Financial</span>
+            </div>
+            <div class="tl-summary">Driving the org-wide CI/CD and Infrastructure-as-Code platform at one of Israel's largest insurance enterprises. The platform is a self-service catalog of reusable, opinionated components: dev teams compose blueprints to ship to production without DevOps becoming a ticket queue.</div>
+            <ul class="tl-bullets">
+              <li><span class="bullet-mark">▸</span><span><span class="lead">Reusable GitHub Actions workflow library.</span> Standardizes build, test, security scanning, image publishing, and deploy across every tech stack. Eliminates per-team pipeline duplication and config drift.</span></li>
+              <li><span class="bullet-mark">▸</span><span><span class="lead">AWS CDK blueprint library.</span> Composable constructs for Lambda, API Gateway, EKS, ECS, Aurora/RDS, SQS/SNS, EventBridge, Step Functions, AWS Batch, S3, Route 53, CloudFront, Secrets Manager, and IAM. Teams import a construct and get a hardened deployment with logging, alerting, and least-privilege baked in.</span></li>
+              <li><span class="bullet-mark">▸</span><span><span class="lead">Custom Python tooling and CDK constructs.</span> Glue AWS services together, automate operational flows, and enforce org-wide guardrails (tagging, cost controls, security baselines).</span></li>
+              <li><span class="bullet-mark">▸</span><span><span class="lead">On-prem legacy stack alongside the cloud platform.</span> Self-hosted Kubernetes, Jenkins pipelines, and ArgoCD GitOps deploys. Bridges legacy systems into the new self-service AWS platform.</span></li>
+              <li><span class="bullet-mark">▸</span><span><span class="lead">DevOps knowledge center + RAG-backed MCP server.</span> Architecture docs, blueprints, and runbooks queryable from Cursor, Claude Code, or Copilot. Other teams' developers get answers from their agent instead of pinging DevOps.</span></li>
+              <li><span class="bullet-mark">▸</span><span><span class="lead">AI-augmented DevOps, end to end.</span> Power-user of GitHub Copilot and Claude Code; authored agent skills, prompts, and MCP integrations that compress repetitive work (pipeline scaffolding, IaC reviews, doc lookups, on-call triage) from hours to minutes.</span></li>
+              <li><span class="bullet-mark">▸</span><span>Power-user of GitHub Copilot and Claude Code; authored agent skills, prompts, and MCP integrations that compress repetitive DevOps work (pipeline scaffolding, IaC reviews, doc lookups, on-call triage) from hours to minutes.</span></li>
+            </ul>
+            <div class="stack">
+              <span class="stack-tag">AWS CDK</span><span class="stack-tag">GitHub Actions</span><span class="stack-tag">Python</span><span class="stack-tag">Lambda</span><span class="stack-tag">API Gateway</span><span class="stack-tag">EKS</span><span class="stack-tag">ECS</span><span class="stack-tag">Aurora</span><span class="stack-tag">SQS/SNS</span><span class="stack-tag">EventBridge</span><span class="stack-tag">Step Functions</span><span class="stack-tag">AWS Batch</span><span class="stack-tag">Route 53</span><span class="stack-tag">CloudFront</span><span class="stack-tag">S3</span><span class="stack-tag">IAM</span><span class="stack-tag">Kubernetes</span><span class="stack-tag">Jenkins</span><span class="stack-tag">ArgoCD</span><span class="stack-tag">Claude Code</span><span class="stack-tag">Copilot</span><span class="stack-tag">MCP</span>
+            </div>
+          </article>
+
+          <article class="tl-item">
+            <div class="tl-marker"></div>
+            <div class="tl-head-top">
+              <span class="mono small muted">2022 - 2024</span>
+              <span class="mono tl-status">COMPLETED</span>
+            </div>
+            <div class="tl-title">
+              <span>DevOps Engineer</span>
+              <span class="muted">@</span>
+              <span class="tl-company">Develeap @ Civ Robotics</span>
+            </div>
+            <div class="tl-summary">Built the DevOps function from scratch at a robotics startup. Software delivery, embedded deployment, and IoT integration from the ground up.</div>
+            <ul class="tl-bullets">
+              <li><span class="bullet-mark">▸</span><span>Built the company's first CI/CD pipelines with GitHub Actions, Bash, Docker, AWS, and JFrog Artifactory. Automated, repeatable delivery for both cloud services and embedded targets.</span></li>
+              <li><span class="bullet-mark">▸</span><span>Simplified embedded deployment by cross-compiling and packaging applications as Debian packages inside Docker, turning brittle manual installs into a one-command flow.</span></li>
+              <li><span class="bullet-mark">▸</span><span>Decomposed a monolithic repository into domain-focused repos, improving modularity, ownership, and parallel team workflow.</span></li>
+              <li><span class="bullet-mark">▸</span><span>Integrated robots as AWS-managed IoT devices for remote logging, real-time telemetry, secure tunneling, and OTA-style deployment.</span></li>
+            </ul>
+            <div class="stack">
+              <span class="stack-tag">AWS</span><span class="stack-tag">GitHub Actions</span><span class="stack-tag">Docker</span><span class="stack-tag">Bash</span><span class="stack-tag">JFrog</span><span class="stack-tag">AWS IoT</span><span class="stack-tag">Debian</span>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- Projects (replaces the interactive ls /projects) -->
+      <section class="panel projects-panel">
+        <div class="panel-header">
+          <span class="mono small muted">03 //</span>
+          <h2>PROJECTS</h2>
+        </div>
+<div class="project-card">
+  <div class="project-head">
+    <span class="project-name">cloudblox/</span>
+    <span class="project-tagline">Personal IaC platform. Production-grade AWS infra from a single <code>blox.yaml</code>.</span>
+    <span class="project-badge">private · pre-launch</span>
+  </div>
+  <div class="project-pitch">
+    The platform layer between DevOps and developers. At scaling startups, 1-2 DevOps engineers field every infra request: devs can't self-serve, DevOps can't keep up. CloudBlox solves both: DevOps writes infra once, developers ship on every push.
+  </div>
+
+  <div class="project-section-label">// how it works</div>
+  <ul class="project-list">
+    <li><span class="pmark">▸</span><span>Composable <strong>blocks</strong> (EKS, RDS, Lambda, ECS, static-sites, more) provision real AWS resources. Pulumi runs under the hood; devs never write or see Pulumi code.</span></li>
+    <li><span class="pmark">▸</span><span>Two-repo model: <strong>infra repo</strong> (DevOps owns shared platform) and <strong>gitops repo</strong> (developers own workloads). One CLI, same <code>cloudblox deploy</code> flow for both.</span></li>
+    <li><span class="pmark">▸</span><span>GitOps-friendly: every workload is declared in YAML, versioned, and reviewed in PRs. Rollback is a git revert.</span></li>
+  </ul>
+
+  <div class="project-section-label">// stack</div>
+  <div class="project-stack">
+    <span class="tag">TypeScript</span><span class="tag">Pulumi</span><span class="tag">Node CLI</span><span class="tag">AWS</span><span class="tag">EKS</span><span class="tag">RDS</span><span class="tag">Lambda</span><span class="tag">CloudFront</span><span class="tag">Route 53</span><span class="tag">GitHub Actions</span>
+  </div>
+</div>
+
+<div class="project-card">
+  <div class="project-head">
+    <span class="project-name">amir-resume-site/</span>
+    <span class="project-tagline">This resume. Dogfooding CloudBlox to ship its own demo site.</span>
+    <span class="project-badge">deployed via cloudblox</span>
+  </div>
+  <div class="project-pitch">
+    The site you're reading is a self-demo of CloudBlox: the same product I'm building deploys this resume to AWS from a tiny YAML file.
+  </div>
+
+  <div class="project-section-label">// what it shows</div>
+  <ul class="project-list">
+    <li><span class="pmark">▸</span><span>Defined in a 10-line <code>blox.yaml</code> using the <code>static-site</code> block.</span></li>
+    <li><span class="pmark">▸</span><span>Provisions S3 + CloudFront + Route 53 + ACM end to end.</span></li>
+    <li><span class="pmark">▸</span><span>Pushed by the same CLI CloudBlox ships to its users.</span></li>
+    <li><span class="pmark">▸</span><span>Built fully static (no JS) so it's fast, indexable, and prints clean to PDF.</span></li>
+  </ul>
+</div>
+      </section>
+
+    </div>
+
+    <div class="col">
+
+      <!-- Skills -->
+      <section class="panel">
+        <div class="panel-header">
+          <span class="mono small muted">02 //</span>
+          <h2>SKILL_MATRIX</h2>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-head"><span class="arrow">▸</span> Cloud (AWS)</div>
+          <div class="skill-row"><span class="skill-name">AWS (broad)</span><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div><span class="skill-pct">90</span></div>
+          <div class="skill-row"><span class="skill-name">Lambda / API GW</span><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div><span class="skill-pct">85</span></div>
+          <div class="skill-row"><span class="skill-name">EKS / ECS</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div><span class="skill-pct">80</span></div>
+          <div class="skill-row"><span class="skill-name">SQS / SNS / EventBridge</span><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div><span class="skill-pct">85</span></div>
+          <div class="skill-row"><span class="skill-name">Step Functions / Batch</span><div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div><span class="skill-pct">75</span></div>
+          <div class="skill-row"><span class="skill-name">Aurora / RDS</span><div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div><span class="skill-pct">75</span></div>
+          <div class="skill-row"><span class="skill-name">Route 53 / CloudFront</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div><span class="skill-pct">80</span></div>
+          <div class="skill-row"><span class="skill-name">IAM / Secrets Manager</span><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div><span class="skill-pct">85</span></div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-head"><span class="arrow">▸</span> Platform &amp; IaC</div>
+          <div class="skill-row"><span class="skill-name">AWS CDK</span><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div><span class="skill-pct">90</span></div>
+          <div class="skill-row"><span class="skill-name">Terraform</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div><span class="skill-pct">80</span></div>
+          <div class="skill-row"><span class="skill-name">Pulumi</span><div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div><span class="skill-pct">75</span></div>
+          <div class="skill-row"><span class="skill-name">Helm</span><div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div><span class="skill-pct">70</span></div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-head"><span class="arrow">▸</span> CI/CD</div>
+          <div class="skill-row"><span class="skill-name">GitHub Actions</span><div class="skill-bar"><div class="skill-fill" style="width:95%"></div></div><span class="skill-pct">95</span></div>
+          <div class="skill-row"><span class="skill-name">Jenkins</span><div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div><span class="skill-pct">70</span></div>
+          <div class="skill-row"><span class="skill-name">JFrog Artifactory</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div><span class="skill-pct">80</span></div>
+          <div class="skill-row"><span class="skill-name">ArgoCD</span><div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div><span class="skill-pct">70</span></div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-head"><span class="arrow">▸</span> Containers &amp; Systems</div>
+          <div class="skill-row"><span class="skill-name">Docker</span><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div><span class="skill-pct">90</span></div>
+          <div class="skill-row"><span class="skill-name">Kubernetes</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div><span class="skill-pct">80</span></div>
+          <div class="skill-row"><span class="skill-name">Linux</span><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div><span class="skill-pct">85</span></div>
+          <div class="skill-row"><span class="skill-name">Git / GitHub</span><div class="skill-bar"><div class="skill-fill" style="width:95%"></div></div><span class="skill-pct">95</span></div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-head"><span class="arrow">▸</span> AI-Augmented DevOps</div>
+          <div class="skill-row"><span class="skill-name">GitHub Copilot</span><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div><span class="skill-pct">90</span></div>
+          <div class="skill-row"><span class="skill-name">Claude Code</span><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div><span class="skill-pct">90</span></div>
+          <div class="skill-row"><span class="skill-name">Agent Skills / Prompts</span><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div><span class="skill-pct">85</span></div>
+          <div class="skill-row"><span class="skill-name">MCP Servers</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div><span class="skill-pct">80</span></div>
+          <div class="skill-row"><span class="skill-name">Internal Knowledge (RAG)</span><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div><span class="skill-pct">85</span></div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-head"><span class="arrow">▸</span> Languages</div>
+          <div class="skill-row"><span class="skill-name">Python</span><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div><span class="skill-pct">85</span></div>
+          <div class="skill-row"><span class="skill-name">Bash</span><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div><span class="skill-pct">90</span></div>
+          <div class="skill-row"><span class="skill-name">TypeScript</span><div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div><span class="skill-pct">75</span></div>
+          <div class="skill-row"><span class="skill-name">JavaScript</span><div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div><span class="skill-pct">75</span></div>
+        </div>
+      </section>
+
+      <!-- Education -->
+      <section class="panel">
+        <div class="panel-header">
+          <span class="mono small muted">04 //</span>
+          <h2>EDUCATION</h2>
+          <span class="mono small muted" style="margin-left: auto;">2 entries</span>
+        </div>
+        <div style="padding: 16px 20px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+              <span style="font-weight: 500;">DevOps Engineer Bootcamp</span>
+              <span class="muted">@</span>
+              <span class="mono small" style="color: var(--accent);">Develeap</span>
+              <span class="mono small muted" style="margin-left: auto;">2022</span>
+            </div>
+            <div class="muted" style="font-size: 13.5px; max-width: 62ch;">Competitive-entry, 800-hour bootcamp covering the full cloud-native stack: Docker, Kubernetes, AWS, Terraform, Jenkins/GitLab/GitHub Actions, Artifactory, networking, certificates, and release lifecycle.</div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+              <span style="font-weight: 500;">Full-Stack Web Development</span>
+              <span class="muted">@</span>
+              <span class="mono small" style="color: var(--accent);">Elevation Academy</span>
+              <span class="mono small muted" style="margin-left: auto;">2020</span>
+            </div>
+            <div class="muted" style="font-size: 13.5px; max-width: 62ch;">520-hour MERN bootcamp. End-to-end projects with clean architecture, external API integrations, and hackathon-driven collaboration.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Meta -->
+      <div class="meta-grid">
+        <section class="panel">
+          <div class="panel-header">
+            <span class="mono small muted">05 //</span>
+            <h2>TRAITS</h2>
+          </div>
+          <div class="trait-grid">
+            <div class="trait"><span class="num">01</span> Problem solver</div>
+            <div class="trait"><span class="num">02</span> Persistent</div>
+            <div class="trait"><span class="num">03</span> Team player</div>
+            <div class="trait"><span class="num">04</span> Continuous learner</div>
+            <div class="trait"><span class="num">05</span> Works under pressure</div>
+            <div class="trait"><span class="num">06</span> Communicator</div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <span class="mono small muted">06 //</span>
+            <h2>LANGUAGES</h2>
+          </div>
+          <div class="lang-list">
+            <div class="lang-row"><span>Hebrew</span><span class="lang-level">Native</span></div>
+            <div class="lang-row"><span>English</span><span class="lang-level">Fluent</span></div>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="hud-footer">
+    <div><span style="color: var(--accent);">●</span> END OF FILE</div>
+    <div>Deployed via <a href="https://github.com/Amir-Benyamini/" target="_blank" rel="noreferrer">CloudBlox</a>, my own AWS platform-as-code project · 2026</div>
+    <div><a href="mailto:benyamini.amir@gmail.com">→ start a conversation</a></div>
+  </footer>
+
+</div>
+
+</body>
+</html>

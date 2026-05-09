@@ -1,0 +1,20 @@
+{
+  "name": "amir-resume",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interactive resume in three formats. Built once, deployed via CloudBlox.",
+  "scripts": {
+    "build": "npm run build:artifact && npm run build:pdf",
+    "build:artifact": "node scripts/build.js",
+    "build:pdf": "bash scripts/build-pdf.sh",
+    "preview": "open artifact.html",
+    "preview:static": "open static/index.html"
+  },
+  "author": "Amir Benyamini <benyamini.amir@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/Amir-Benyamini/resume",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Amir-Benyamini/resume.git"
+  }
+}

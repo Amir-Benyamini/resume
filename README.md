@@ -15,15 +15,21 @@ It also doubles as the demo site for [CloudBlox](https://github.com/Amir-Benyami
 
 ```
 .
-├── artifact.html              Interactive React/JSX resume (Claude.ai artifact bundle)
-├── static/
-│   └── index.html             Static, self-contained HTML version (no JS, no build)
 ├── src/
-│   ├── components.jsx         React components + RESUME data
+│   ├── components.jsx         React components + RESUME data (source of truth)
 │   ├── mount.jsx              App composition + accent/density tweaks
 │   └── tweaks-panel.jsx       Tweaks panel (palette / density / scanlines)
-└── Amir-Benyamini-Resume.pdf  PDF rendered from static/index.html
+├── static/
+│   └── index.html             Static no-JS HTML version (also the PDF source)
+├── scripts/
+│   ├── build.js               Builds artifact.html from src/*.jsx (Node, zero deps)
+│   └── build-pdf.sh           Renders the PDF via Chrome headless
+├── artifact.html              BUILD OUTPUT: interactive React resume (committed)
+├── Amir-Benyamini-Resume.pdf  BUILD OUTPUT: PDF (committed)
+└── package.json               npm scripts wrapping the builds
 ```
+
+`src/` is the source of truth. `artifact.html` and the PDF are committed build outputs — convenient to open without a build step, but always rebuild before deploying.
 
 ### The three formats
 
@@ -37,29 +43,64 @@ It also doubles as the demo site for [CloudBlox](https://github.com/Amir-Benyami
 
 ## Run it locally
 
-Open either HTML directly in a browser:
+Open either HTML directly in a browser — no install, no server, no build:
 
 ```sh
-open artifact.html              # interactive (terminal works)
-open static/index.html          # static
+npm run preview                 # interactive (terminal + tweaks panel)
+npm run preview:static          # static no-JS version
 ```
 
-Re-render the PDF (Chrome headless):
+---
+
+## Build (rebuild before every deploy)
+
+The interactive `artifact.html` and the PDF are **build outputs**. Rebuild from source whenever you edit `src/` or `static/index.html`:
 
 ```sh
-"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
-  --headless=new --disable-gpu \
-  --no-pdf-header-footer --print-to-pdf-no-header \
-  --print-to-pdf=Amir-Benyamini-Resume.pdf \
-  --virtual-time-budget=2000 \
-  "file://$(pwd)/static/index.html"
+npm run build                   # rebuilds both artifact.html and the PDF
 ```
+
+Or individually:
+
+```sh
+npm run build:artifact          # src/*.jsx → artifact.html (~67 KB)
+npm run build:pdf               # static/index.html → Amir-Benyamini-Resume.pdf
+```
+
+Direct invocation (no npm needed):
+
+```sh
+node scripts/build.js
+bash scripts/build-pdf.sh
+```
+
+### How the artifact build works
+
+`scripts/build.js` is ~50 lines, zero dependencies (Node built-ins only). It:
+
+1. Reads the `<style>` block from `static/index.html` so both versions share the exact same CSS (single source of styling).
+2. Reads `src/tweaks-panel.jsx`, `src/components.jsx`, `src/mount.jsx` (load order matters — each exposes globals the next consumes).
+3. Wraps everything in an HTML shell that loads React 18, ReactDOM, and Babel-standalone from unpkg (CDN). Babel transforms the JSX in the browser at load time.
+4. Writes `artifact.html`.
+
+There's no bundler (no esbuild, no Vite, no webpack). The "build step" is a string join. This keeps the dependency surface to zero and the build instant.
+
+`scripts/build-pdf.sh` runs Chrome headless against `static/index.html` and saves the resulting PDF. macOS path; tweak `CHROME` for Linux.
 
 ---
 
 ## Deployment
 
-The static build is deployed to AWS via [CloudBlox](https://github.com/Amir-Benyamini/) using its `static-site` block:
+**Always build first** so the deployed artifact reflects your latest source:
+
+```sh
+npm run build                   # artifact.html + PDF
+# ...then deploy artifact.html (or static/index.html) to AWS / CDN
+```
+
+The site is hosted on AWS as `S3 (private) → CloudFront → Route 53 → ACM (TLS)`. CloudFront fetches `artifact.html` from a private S3 bucket via Origin Access Control; nothing in S3 is publicly readable.
+
+Eventually the site is deployed via [CloudBlox](https://github.com/Amir-Benyamini/) using its `static-site` block:
 
 ```yaml
 # .cloudblox/prod/blox.yaml
@@ -67,7 +108,7 @@ region: us-east-1
 workloads:
   - type: static-site
     name: amir-resume
-    source: ./static
+    source: ./           # serves artifact.html as index
     domain: amirbenyamini.dev      # placeholder
     cdn: true
 ```
